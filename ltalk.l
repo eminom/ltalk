@@ -19,16 +19,6 @@ struct {
 	return TokenStruct;
 }
 
-String {
-	PRT("string");
-	return TokenString;
-}
-
-void {
-	PRT("void");
-	return TokenVoid;
-}
-
 [a-zA-Z][a-zA-Z0-9_]*  {
 	PRT("var");
 	yylval = strdup(yytext);
@@ -38,6 +28,11 @@ void {
 ;   {
 	PRT("semicolon");
 	return TokenSemicolon;
+}
+
+,  {
+	PRT("comma");
+	return TokenComma;
 }
 
 \{  {
