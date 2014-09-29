@@ -236,8 +236,15 @@ TokenComma Param ParamTail{
 |{   /*This must can be of empty*/}
 ;
 
+ParamName:
+Var {
+	//paramName_set($1);
+}
+|{ /*paramName_set("");*/}
+;
+
 Param:
-TypeVar Var{
+TypeVar ParamName{
 	DBGPrint("[Param] picking %s", curTypeStr);     // Now
 	ParamEntry *pe = paramEntry_create(curTypeStr);  //Only type string
 	if(curParam){
