@@ -3,9 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define YYTYPE char*
+#define YYSTYPE char*
 #include "y.tab.h"
+
 int yylex(void);
+
+//Ubuntu warns in this API
+extern char *strdup(const char*);
 
 //#define PRT(...)	{printf(__VA_ARGS__); puts("");}
 #define PRT(...)
@@ -67,7 +71,9 @@ struct {
 
 [ \t\n\r]         ;
 
-.   {ERROR("Unknown token\n");}
+.   {ERROR("Unknown token\n");
+		 abort();
+}
 
 %%
 
