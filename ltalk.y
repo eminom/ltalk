@@ -103,6 +103,22 @@ StructExports *curEx = 0;
 ParamEntry *curParam = 0;
 FuncEntry *curFunc = 0;
 
+char* curTypeStr = 0;
+void typeStr_set(const char* name){
+	if(curTypeStr){
+		free(curTypeStr);
+	}
+	curTypeStr = (char*)malloc(sizeof(char) * (1+strlen(name)));
+	strcpy(curTypeStr, name);
+}
+
+void typeStr_dispose(){
+	if(curTypeStr){
+		free(curTypeStr);
+		curTypeStr = 0;
+	}
+}
+
 void chExports_dispose(StructExports *ex){
 	DBGPrint("%s (%p)",__FUNCTION__, ex);
 	if(ex->func){
@@ -143,6 +159,7 @@ void chExports_setName(StructExports *ex, const char *name){
 %}
 
 %token Var
+%token TokenStar
 %token TokenLeftBracket
 %token TokenRightBracket
 %token TokenLeftSquare
@@ -185,10 +202,20 @@ InterfaceMethodHead ParamOp TokenRightMoon{
 	curParam = NULL;
 };
 
+TypeVar:
+Var TokenStar  { 
+	char buf[BUFSIZ];
+	snprintf(buf, sizeof(buf), "%s*", $1);
+	typeStr_set(buf);
+}
+|Var {
+	typeStr_set($1);
+}
+
 InterfaceMethodHead:
-Var Var TokenLeftMoon{
-	DBGPrint("[Func] picks %s %s", $1, $2);
-	FuncEntry *func = funcEntry_create($1,$2);
+TypeVar Var TokenLeftMoon{
+	DBGPrint("[Func] picks %s %s", curTypeStr, $2);
+	FuncEntry *func = funcEntry_create(curTypeStr, $2);
 	if(curFunc){
 		func->next = curFunc;
 		curFunc = func;
@@ -210,9 +237,9 @@ TokenComma Param ParamTail{
 ;
 
 Param:
-Var Var{
-	DBGPrint("[Param] picking %s", $1);     // Now
-	ParamEntry *pe = paramEntry_create($1);  //Only type string
+TypeVar Var{
+	DBGPrint("[Param] picking %s", curTypeStr);     // Now
+	ParamEntry *pe = paramEntry_create(curTypeStr);  //Only type string
 	if(curParam){
 		pe->next = curParam;
 		curParam = pe;
@@ -246,10 +273,10 @@ int main(void){
 		return -1;
 	}
 
-
 	if(curEx){
 		chExports_dispose(curEx);
 	}
+	typeStr_dispose();
 
 	return 0;
 }
