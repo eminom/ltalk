@@ -16,8 +16,8 @@ extern int yylineno;
 #define DBGPrint(...)
 
 
-#define SymStructEnd	"*"
-#define SymFuncEnd		":"
+#define SymStructEnd	""
+#define SymFuncEnd		""
 
 
 typedef struct tagParamEntry{
