@@ -34,6 +34,11 @@ struct {
 	return TokenSemicolon;
 }
 
+\*  {
+	PRT("star");
+	return TokenStar;
+}
+
 ,  {
 	PRT("comma");
 	return TokenComma;
