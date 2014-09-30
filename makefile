@@ -5,5 +5,5 @@ all:
 
 clean:
 	rm -rf parser
-	rm y.tab.c y.tab.h lex.yy.c
+	rm -f y.tab.c y.tab.h lex.yy.c
 
