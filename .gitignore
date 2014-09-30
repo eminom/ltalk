@@ -3,5 +3,6 @@
 *.cpp
 *.swp
 *.pak
+*.json
 parser
 
