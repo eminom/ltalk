@@ -80,7 +80,7 @@ TokenStatic TypeVar { curIsStatic = 1;}
 InterfaceMethodHead:
 MethodTypeVar Var {
 	DBGPrint("[Func] picks %s %s", curTypeStr, $2);
-	FuncEntry *func = funcEntry_create(curTypeStr, $2);
+	FuncEntry *func = funcEntry_create(curTypeStr, $2, curIsStatic);
 	if(curFunc){
 		func->next = curFunc;
 		curFunc = func;

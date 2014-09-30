@@ -25,12 +25,14 @@ ParamEntry *paramEntry_create(const char *type);
 typedef struct tagFuncEntry{
 	char *typeString;
 	char *name;
+	int isStatic;
 	ParamEntry *param;
 	struct tagFuncEntry *next;
 }FuncEntry;
 
 void funcEntry_dispose(FuncEntry *entry);
-FuncEntry* funcEntry_create(const char *type, const char *name);
+FuncEntry* 
+funcEntry_create(const char *type, const char *name, int isStatic);
 
 typedef struct tagStructExports{
 	char *name;

@@ -39,13 +39,15 @@ void funcEntry_dispose(FuncEntry *entry){
 	}
 }
 
-FuncEntry* funcEntry_create(const char *type, const char *name){
+FuncEntry* 
+funcEntry_create(const char *type, const char *name, int isStatic){
 	FuncEntry *fe = (FuncEntry*)malloc(sizeof(FuncEntry));
 	memset(fe, 0, sizeof(FuncEntry));
 	fe->typeString = (char*)malloc(sizeof(char)*(1+strlen(type)));
 	strcpy(fe->typeString, type);
 	fe->name = (char*)malloc(sizeof(char)*(1+strlen(name)));
 	strcpy(fe->name, name);
+	fe->isStatic = isStatic;
 	return fe;
 }
 
