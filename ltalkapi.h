@@ -20,7 +20,7 @@ typedef struct tagParamEntry{
 void paramEntry_dispose(ParamEntry *param);
 ParamEntry *paramEntry_create(const char *type);
 
-void paramEntry_writeRecursive(ParamEntry *param);
+
 
 typedef struct tagFuncEntry{
 	char *typeString;
@@ -31,8 +31,6 @@ typedef struct tagFuncEntry{
 
 void funcEntry_dispose(FuncEntry *entry);
 FuncEntry* funcEntry_create(const char *type, const char *name);
-void funcEntry_write(FuncEntry *func);
-void funcEntry_writeRecursive(FuncEntry *func);
 
 typedef struct tagStructExports{
 	char *name;
@@ -51,7 +49,6 @@ void typeStr_dispose();
 
 void chExports_dispose(StructExports *ex);
 StructExports* chExports_create(const char *name);
-void chExports_write(StructExports *ex);
 void chExports_setName(StructExports *ex, const char *name);
 
 

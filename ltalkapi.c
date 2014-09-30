@@ -23,11 +23,6 @@ ParamEntry *paramEntry_create(const char *type){
 	return pe;
 }
 
-void paramEntry_writeRecursive(ParamEntry *param){
-	if(!param){return;}
-	paramEntry_writeRecursive(param->next);
-	printf("<%s>,", param->typeString);
-}
 
 void funcEntry_dispose(FuncEntry *entry){
 	FuncEntry *now = entry;
@@ -54,17 +49,6 @@ FuncEntry* funcEntry_create(const char *type, const char *name){
 	return fe;
 }
 
-void funcEntry_write(FuncEntry *func){
-	printf("  %s %s(", func->typeString, func->name);
-	paramEntry_writeRecursive(func->param);
-	printf(")%s\n", SymFuncEnd);
-}
-
-void funcEntry_writeRecursive(FuncEntry *func){
-	if(!func){return;}
-	funcEntry_writeRecursive(func->next);
-	funcEntry_write(func);
-}
 
 void typeStr_set(const char* name){
 	if(curTypeStr){
@@ -99,11 +83,6 @@ StructExports* chExports_create(const char *name){
 	return ex;
 }
 
-void chExports_write(StructExports *ex){
-	printf("structure %s {\n", ex->name);
-	funcEntry_writeRecursive(ex->func);
-	printf("}%s\n", SymStructEnd);
-}
 
 void chExports_setName(StructExports *ex, const char *name){
 	DBGPrint("setName %p",ex);
