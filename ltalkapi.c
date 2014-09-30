@@ -119,3 +119,4 @@ StructExports *curEx = 0;
 ParamEntry *curParam = 0;
 FuncEntry *curFunc = 0;
 char* curTypeStr = 0;
+int curIsStatic = 0;

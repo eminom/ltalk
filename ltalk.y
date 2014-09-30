@@ -17,6 +17,7 @@ extern int yylineno;
 %}
 
 %token Var
+%token TokenStatic
 %token TokenStar
 %token TokenLeftBracket
 %token TokenRightBracket
@@ -55,7 +56,7 @@ TokenLeftBracket InterfaceOp TokenRightBracket{
 ;
 
 InterfaceMethod:
-InterfaceMethodHead ParamOp TokenRightMoon{
+InterfaceMethodHead TokenLeftMoon ParamOp TokenRightMoon{
 	curFunc->param = curParam;
 	curParam = NULL;
 };
@@ -70,8 +71,13 @@ Var TokenStar  {
 	typeStr_set($1);
 }
 
+MethodTypeVar:
+TokenStatic TypeVar { curIsStatic = 1;}
+|TypeVar { curIsStatic = 0; }
+;
+
 InterfaceMethodHead:
-TypeVar Var TokenLeftMoon{
+MethodTypeVar Var {
 	DBGPrint("[Func] picks %s %s", curTypeStr, $2);
 	FuncEntry *func = funcEntry_create(curTypeStr, $2);
 	if(curFunc){

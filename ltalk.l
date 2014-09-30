@@ -23,6 +23,11 @@ struct {
 	return TokenStruct;
 }
 
+static {
+	PRT("static");
+	return TokenStatic;
+}
+
 [a-zA-Z][a-zA-Z0-9_]*  {
 	PRT("var");
 	yylval = strdup(yytext);
