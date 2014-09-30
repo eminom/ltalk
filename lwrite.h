@@ -6,10 +6,10 @@
 
 #include "ltalkapi.h"
 
-void paramEntry_writeRecursive(ParamEntry *param);
+//void paramEntry_writeRecursive(ParamEntry *param);
 
-void funcEntry_write(FuncEntry *func);
-void funcEntry_writeRecursive(FuncEntry *func);
+//void funcEntry_write(FuncEntry *func);
+//void funcEntry_writeRecursive(FuncEntry *func);
 
 void chExports_write(StructExports *ex);
 
