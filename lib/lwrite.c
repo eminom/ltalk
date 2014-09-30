@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lwrite.h"
-#include "json/cJSON.h"
+#include "../json/cJSON.h"
 
 void paramEntry_writeRecursive(ParamEntry *param){
 	if(!param){return;}
