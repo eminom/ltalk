@@ -5,4 +5,6 @@ all:
 
 clean:
 	rm -rf parser
+	rm *.c
+	rm *.h
 
