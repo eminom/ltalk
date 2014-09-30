@@ -1,0 +1,57 @@
+
+
+#ifndef _LTALK_API_DEF_H__
+#define _LTALK_API_DEF_H__
+
+#include <stdio.h>
+
+//#define DBGPrint(...)	{ printf(__VA_ARGS__); puts("");}
+#define DBGPrint(...)
+
+#define SymStructEnd	""
+#define SymFuncEnd		""
+
+
+typedef struct tagParamEntry{
+	char *typeString;
+	struct tagParamEntry *next;
+}ParamEntry;
+
+void paramEntry_dispose(ParamEntry *param);
+ParamEntry *paramEntry_create(const char *type);
+
+void paramEntry_writeRecursive(ParamEntry *param);
+
+typedef struct tagFuncEntry{
+	char *typeString;
+	char *name;
+	ParamEntry *param;
+	struct tagFuncEntry *next;
+}FuncEntry;
+
+void funcEntry_dispose(FuncEntry *entry);
+FuncEntry* funcEntry_create(const char *type, const char *name);
+void funcEntry_write(FuncEntry *func);
+void funcEntry_writeRecursive(FuncEntry *func);
+
+typedef struct tagStructExports{
+	char *name;
+	FuncEntry *func;
+	//No next for now
+}StructExports;
+
+extern StructExports *curEx;
+extern ParamEntry *curParam;
+extern FuncEntry *curFunc;
+extern char* curTypeStr;
+
+void typeStr_set(const char* name);
+void typeStr_dispose();
+
+void chExports_dispose(StructExports *ex);
+StructExports* chExports_create(const char *name);
+void chExports_write(StructExports *ex);
+void chExports_setName(StructExports *ex, const char *name);
+
+
+#endif
