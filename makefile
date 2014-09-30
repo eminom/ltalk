@@ -1,7 +1,7 @@
 all:
 	yacc -d ltalk.y
 	lex -l ltalk.l
-	cc -std=c99 -o parser *.c
+	cc -std=c99 -o parser *.c json/cJSON.c -lm
 
 clean:
 	rm -rf parser
