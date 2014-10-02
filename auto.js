@@ -9,9 +9,11 @@ function getFunctionSig(className, methodName){
 	return "int lua_user_" + className + "_" + methodName + "(lua_State *tolua_S)";
 }
 
-function getPredecl(className){
+function getPredecl(className, isStatic){
 	var rv =   "  int argc = 0;\n  bool ok = true;\n";
-	rv +=      "  " + className + "* cobj = nullptr;\n";
+	if(!isStatic){
+		rv +=      "  " + className + "* cobj = nullptr;\n";
+	}
 	return rv;
 }
 
@@ -70,12 +72,12 @@ function getParam(type, p){
 	return typeIn[type](p);
 }
 
-function writeFunction(clsName, info, name, writer){
+function writeFunction(clsName, info, name, isStatic, writer){
 	writer("///////Automatical for lua_" + clsName + "_" + name + "(...)\n");
 	writer(getFunctionSig(clsName, name));
 	//body
 	writer("\n{\n");
-	writer(getPredecl(clsName));
+	writer(getPredecl(clsName, isStatic));
 	writer(getErrorDecl());
 	writer(getTableCheck(clsName, name));
 	writer(getArgcCheck(info.Param.length, name));
@@ -92,7 +94,11 @@ function writeFunction(clsName, info, name, writer){
 	}
 
 	//Calling starts
-	writer("cobj->" + name + "(");
+	if(isStatic){
+		writer(clsName + "::" + name + "(");
+	} else {
+	  writer("cobj->" + name + "(");
+	}
 	for(var i=0;i<info.Param.length;++i){
 		writer("p"+i);
 		if( i < info.Param.length - 1 ){
@@ -127,7 +133,10 @@ function ParseOne(o, clsName){
 	//console.log("Object");
 	var writer = function(d){ process.stdout.write(d);};
 	for(var i in o.Object){
-		writeFunction(clsName, o.Object[i], i, writer);
+		writeFunction(clsName, o.Object[i], i, false, writer);
+	}
+	for(var i in o.Static){
+	  writeFunction(clsName, o.Static[i], i, true, writer);
 	}
 }
 
