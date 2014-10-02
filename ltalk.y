@@ -18,6 +18,7 @@ extern int yylineno;
 %}
 
 %token Var
+%token TokenConst
 %token TokenStatic
 %token TokenStar
 %token TokenLeftBracket
@@ -63,13 +64,20 @@ InterfaceMethodHead TokenLeftMoon ParamOp TokenRightMoon{
 };
 
 TypeVar:
-Var TokenStar  { 
+TokenConst Var TokeStar{
+	char buf[BUFSIZ];
+	snprintf(buf, sizeof(buf), "%s*", $2);
+	curVarIsConst = 1;
+}
+|Var TokenStar  { 
 	char buf[BUFSIZ];
 	snprintf(buf, sizeof(buf), "%s*", $1);
 	typeStr_set(buf);
+	curVarIsConst = 0;
 }
 |Var {
 	typeStr_set($1);
+	curVarIsConst = 0;
 }
 
 MethodTypeVar:

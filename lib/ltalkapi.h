@@ -45,6 +45,7 @@ extern ParamEntry *curParam;
 extern FuncEntry *curFunc;
 extern char* curTypeStr;
 extern int curIsStatic;
+extern int curVarIsConst;
 
 void typeStr_set(const char* name);
 void typeStr_dispose();

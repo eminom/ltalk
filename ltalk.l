@@ -28,6 +28,11 @@ static {
 	return TokenStatic;
 }
 
+const {
+	PRT("const");
+	return TokenConst;
+}
+
 [a-zA-Z][a-zA-Z0-9_]*  {
 	PRT("var");
 	yylval = strdup(yytext);
