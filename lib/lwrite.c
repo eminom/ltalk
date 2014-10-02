@@ -30,7 +30,7 @@ void funcEntry_writeRecursive(FuncEntry *func){
 	funcEntry_write(func);
 }
 
-#define _WRITE_PLAIN
+//#define _WRITE_PLAIN
 
 #if defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
