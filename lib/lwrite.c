@@ -13,7 +13,13 @@ void paramEntry_writeRecursive(ParamEntry *param){
 
 
 void funcEntry_write(FuncEntry *func){
-	printf("  %s %s(", func->typeString, func->name);
+	printf("  ");
+	if(func->isStatic){
+		printf("static ");
+	}
+	printf("%s ", func->typeString);
+	printf("%s", func->name);
+	printf("(");
 	paramEntry_writeRecursive(func->param);
 	printf(")%s\n", SymFuncEnd);
 }
