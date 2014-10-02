@@ -20,8 +20,6 @@ typedef struct tagParamEntry{
 void paramEntry_dispose(ParamEntry *param);
 ParamEntry *paramEntry_create(const char *type);
 
-
-
 typedef struct tagFuncEntry{
 	char *typeString;
 	char *name;
@@ -45,7 +43,6 @@ extern ParamEntry *curParam;
 extern FuncEntry *curFunc;
 extern char* curTypeStr;
 extern int curIsStatic;
-extern int curVarIsConst;
 
 void typeStr_set(const char* name);
 void typeStr_dispose();

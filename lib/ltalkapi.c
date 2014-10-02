@@ -101,4 +101,3 @@ ParamEntry *curParam = 0;
 FuncEntry *curFunc = 0;
 char* curTypeStr = 0;
 int curIsStatic = 0;
-int curVarIsConst = 0;
