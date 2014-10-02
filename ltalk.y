@@ -64,20 +64,18 @@ InterfaceMethodHead TokenLeftMoon ParamOp TokenRightMoon{
 };
 
 TypeVar:
-TokenConst Var TokeStar{
+TokenConst Var TokenStar{
 	char buf[BUFSIZ];
-	snprintf(buf, sizeof(buf), "%s*", $2);
-	curVarIsConst = 1;
+	snprintf(buf, sizeof(buf), "const %s*", $2);
+	typeStr_set(buf);
 }
 |Var TokenStar  { 
 	char buf[BUFSIZ];
 	snprintf(buf, sizeof(buf), "%s*", $1);
 	typeStr_set(buf);
-	curVarIsConst = 0;
 }
 |Var {
 	typeStr_set($1);
-	curVarIsConst = 0;
 }
 
 MethodTypeVar:
@@ -119,7 +117,7 @@ Var {
 Param:
 TypeVar ParamName{
 	DBGPrint("[Param] picking %s", curTypeStr);     // Now
-	ParamEntry *pe = paramEntry_create(curTypeStr);  //Only type string
+	ParamEntry *pe = paramEntry_create(curTypeStr); 
 	if(curParam){
 		pe->next = curParam;
 		curParam = pe;

@@ -24,7 +24,9 @@ void funcEntry_writeRecursive(FuncEntry *func){
 	funcEntry_write(func);
 }
 
-#if 0
+#define _WRITE_PLAIN
+
+#if defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
 	printf("structure %s {\n", ex->name);
 	funcEntry_writeRecursive(ex->func);
@@ -55,6 +57,8 @@ void funcEntry_writeRecursive_J(FuncEntry *fe, cJSON *func, cJSON *staticFunc){
 	funcEntry_write_J(fe, func, staticFunc);
 }
 
+
+#if !defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
 	cJSON *root = cJSON_CreateObject();
 
@@ -73,6 +77,7 @@ void chExports_write(StructExports *ex){
 	free(outs);
 	cJSON_Delete(root);
 }
+#endif
 
 
 
