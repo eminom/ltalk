@@ -132,12 +132,39 @@ function ParseOne(o, clsName){
 	// }
 	//console.log("Object");
 	var writer = function(d){ process.stdout.write(d);};
+	writer("//Section for " + clsName);
 	for(var i in o.Object){
 		writeFunction(clsName, o.Object[i], i, false, writer);
 	}
 	for(var i in o.Static){
 	  writeFunction(clsName, o.Static[i], i, true, writer);
 	}
+	writer("//Section for " + clsName + " over.\n");
+
+
+	writer("int lua_register_user_" + clsName + "(lua_State *tolua_S)\n");
+	writer("{\n");
+	writer("  tolua_usertype(tolua_S, \"user." + clsName + "\");\n");
+	writer("  tolua_cclass(tolua_S, \"" + clsName + "\", \"user." + 
+		clsName + "\", \"cc.Node\", nullptr);\n");
+	writer("  tolua_beginmodule(tolua_S, \"" + clsName + "\");\n");
+
+
+	var outs = function(sets){
+		for(var i in sets){
+			writer("    tolua_function(tolua_S, \"" + i + "\", lua_user_ " + clsName +
+						"_" + i + ");\n");
+		}
+	};
+	outs(o.Object);
+	outs(o.Static);
+
+	writer("  tolua_endmodule(tolua_S);\n");
+	writer("  std::string typeName = typeid(" + clsName + ").name();\n");
+	writer("  g_luaType[typeName] = \"user." + clsName + "\";\n");
+	writer("  g_typeCast[\"" + clsName + "\"] = \"user." + clsName + "\";\n");
+	writer("  return 1;\n");
+	writer("}\n");
 }
 
 function main(){
@@ -147,6 +174,8 @@ function main(){
 	for(var i in stru){
 		ParseOne(stru[i], i);
 	}
+	//Write the exporters.
+
 }
 
 main();
