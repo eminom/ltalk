@@ -28,6 +28,11 @@ static {
 	return TokenStatic;
 }
 
+public {
+	PRT("public");
+	return TokenPublic;
+}
+
 const {
 	PRT("const");
 	return TokenConst;

@@ -21,6 +21,7 @@ extern int yylineno;
 %token TokenColon
 %token TokenConst
 %token TokenStatic
+%token TokenPublic
 %token TokenStar
 %token TokenLeftBracket
 %token TokenRightBracket
@@ -35,13 +36,20 @@ extern int yylineno;
 %%
 
 StructDefinition:
-StructHead StructBody TokenSemicolon{
+StructHead StructHeadOp StructBody TokenSemicolon{
 	DBGPrint("Struct[%s] is defined", curEx->name);
 	assert(curEx->func == 0);
 	curEx->func = curFunc;
 	curFunc = NULL;
 	chExports_write(curEx);
 }
+;
+
+StructHeadOp:
+TokenColon TokenPublic Var {
+	chExports_setSuperInfo(curEx, $3);
+}
+| {   /*Can do nothing */}
 ;
 
 StructHead:
