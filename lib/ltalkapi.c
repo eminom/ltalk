@@ -95,6 +95,15 @@ void chExports_setName(StructExports *ex, const char *name){
 	strcpy(ex->name, name);
 }
 
+void chExports_setSuperInfo(StructExports *ex, const char *superClass){
+	DBGPrint("setSuperInfo %p", ex);
+	if(ex->superClass){
+		free(ex->superClass);
+	}
+	ex->superClass = (char*)malloc((strlen(superClass)+1)*sizeof(char));
+	strcpy(ex->superClass, superClass);
+};
+
 
 StructExports *curEx = 0;
 ParamEntry *curParam = 0;

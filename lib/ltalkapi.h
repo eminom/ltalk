@@ -35,6 +35,7 @@ funcEntry_create(const char *type, const char *name, int isStatic);
 typedef struct tagStructExports{
 	char *name;
 	FuncEntry *func;
+	char *superClass;
 	//No next for now
 }StructExports;
 
@@ -50,6 +51,6 @@ void typeStr_dispose();
 void chExports_dispose(StructExports *ex);
 StructExports* chExports_create(const char *name);
 void chExports_setName(StructExports *ex, const char *name);
-
+void chExporst_setSuperInfo(StructExports *ex, const char *superName);
 
 #endif
