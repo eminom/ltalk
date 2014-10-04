@@ -146,13 +146,13 @@ function ParseOne(o, clsName){
 	writer("{\n");
 	writer("  tolua_usertype(tolua_S, \"user." + clsName + "\");\n");
 	writer("  tolua_cclass(tolua_S, \"" + clsName + "\", \"user." + 
-		clsName + "\", \"cc.Node\", nullptr);\n");
+		clsName + "\", \"cc." + o.Super + "\", nullptr);\n");
 	writer("  tolua_beginmodule(tolua_S, \"" + clsName + "\");\n");
 
 
 	var outs = function(sets){
 		for(var i in sets){
-			writer("    tolua_function(tolua_S, \"" + i + "\", lua_user_ " + clsName +
+			writer("    tolua_function(tolua_S, \"" + i + "\", lua_user_" + clsName +
 						"_" + i + ");\n");
 		}
 	};
