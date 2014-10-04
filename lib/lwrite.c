@@ -30,7 +30,7 @@ void funcEntry_writeRecursive(FuncEntry *func){
 	funcEntry_write(func);
 }
 
-#define _WRITE_PLAIN
+//#define _WRITE_PLAIN
 
 #if defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
@@ -80,6 +80,12 @@ void chExports_write(StructExports *ex){
 	funcEntry_writeRecursive_J(ex->func, func, staticFunc);
 	cJSON_AddItemToObject(thisStru, "Object", func);
 	cJSON_AddItemToObject(thisStru, "Static", staticFunc);
+
+	const char *superCls = "SuperNode"; //This is the default
+	if(ex->superClass){
+		superCls = ex->superClass;
+	}
+	cJSON_AddItemToObject(thisStru, "Super", cJSON_CreateString(superCls));
 
 	//
 	char * outs = cJSON_Print(root);

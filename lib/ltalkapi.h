@@ -51,6 +51,6 @@ void typeStr_dispose();
 void chExports_dispose(StructExports *ex);
 StructExports* chExports_create(const char *name);
 void chExports_setName(StructExports *ex, const char *name);
-void chExporst_setSuperInfo(StructExports *ex, const char *superName);
+void chExports_setSuperInfo(StructExports *ex, const char *superName);
 
 #endif
