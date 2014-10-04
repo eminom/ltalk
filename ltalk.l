@@ -44,6 +44,11 @@ const {
 	return TokenSemicolon;
 }
 
+:   {
+	PRT("colon");
+	return TokenColon;
+}
+
 \*  {
 	PRT("star");
 	return TokenStar;

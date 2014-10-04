@@ -18,6 +18,7 @@ extern int yylineno;
 %}
 
 %token Var
+%token TokenColon
 %token TokenConst
 %token TokenStatic
 %token TokenStar
