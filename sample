@@ -1,0 +1,45 @@
+//This is what is expected.
+
+TOLUA_API int register_all_cocos2dx(lua_State *tolua_S)
+{
+	tolua_open(tolua_S);
+	tolua_module(tolua_S, "cc", 0);
+	tolua_beginmodule(tolua_S, "cc");
+
+	//And the batches go on here
+	//
+	lua_register_cocos2dx_Ref(tolua_S);
+	lua_register_cocos2dx_Console(tolua_S);
+	lua_register_cocos2dx_Node(tolua_S);
+	//And so on and on
+
+	//Finally
+	tolua_endmodule(tolua_S);
+	return 1;  //The return value is irrelevant. 
+}
+
+//And this is what we should be interested.
+//The organization of lua_register_cocos2dx_Node(tolua_S);
+
+int lua_register_cocos2dx_Node(lua_State *tolua_S)
+{
+	tolua_usertype(tolua_S, "cc.Node");
+	tolua_cclass(tolua_S, "Node", "cc.Node", "cc.Ref", nullptr);
+
+	tolua_beginmodule(tolua_S, "Node");
+		tolua_function(tolua_S, "addChild", lua_cocos2dx_Node_addChild);
+		tolua_function(tolua_S, "removeComponent", lua_cocos2dx_Node_removeChild);
+	  //And so on. 
+		//And what should be paid special attention to, is the following ones.
+		tolua_function(tolua_S, "create", lua_cocos2dx_Node_create);
+		// This is the exporting of the static ones. 
+		//(And along with the object ones
+	tolua_endmodule(tolua_S);
+	std::string typeName = typeid(cocos2d::Node).name();
+	g_luaType[typeName] = "cc.Node";
+	g_typeCast["Node"] = "cc.Node";
+  return 1;   // The return value is irrelevant. Just return 1.
+}
+
+
+
