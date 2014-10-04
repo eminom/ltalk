@@ -30,11 +30,15 @@ void funcEntry_writeRecursive(FuncEntry *func){
 	funcEntry_write(func);
 }
 
-//#define _WRITE_PLAIN
+#define _WRITE_PLAIN
 
 #if defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
-	printf("structure %s {\n", ex->name);
+	printf("structure %s ", ex->name);
+	if(ex->superClass){
+		printf(": public %s ", ex->superClass);
+	}
+	printf("{\n");
 	funcEntry_writeRecursive(ex->func);
 	printf("}%s\n", SymStructEnd);
 }
