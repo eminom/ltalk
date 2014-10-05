@@ -1,0 +1,13 @@
+int lua_register_${Space}_${Class}(lua_State *tolua_S)
+{
+  tolua_usertype(tolua_S, "${Space}.${Class}");
+  tolua_cclass(tolua_S, "${Class}", "${Space}.${Class}", "cc.${Super}", nullptr);
+  tolua_beginmodule(tolua_S, "${Class}");
+
+${Insert}
+  tolua_endmodule(tolua_S);
+  std::string typeName = typeid(${Class}).name();
+  g_luaType[typeName] = "${Space}.${Class}";
+  g_typeCast["${Class}"] = "${Space}.${Class}";
+  return 1;
+}

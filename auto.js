@@ -1,71 +1,28 @@
 #! /usr/local/bin/node 
 
 var fs = require('fs');
+var assert = require('assert');
 var loadStream = require('./loader');
 var typeIn = require('./typecaster').in;
 var typeOut= require('./typecaster').out;
+var format = require('./format').formatKey;
 
-function getFunctionSig(className, methodName){
-	return "int lua_user_" + className + "_" + methodName + "(lua_State *tolua_S)";
-}
-
-function getPredecl(className, isStatic){
-	var rv =   "  int argc = 0;\n  bool ok = true;\n";
-	if(!isStatic){
-		rv +=      "  " + className + "* cobj = nullptr;\n";
-	}
-	return rv;
-}
-
-function getErrorDecl(){
-	var rv = "\n";
-	rv +=    "#if COCOS2D_DEBUG >= 1 \n";
-	rv +=    "  tolua_Error tolua_err;\n";
-	rv +=    "#endif\n\n";
-	return rv;
-}
-
-function getTableCheck(className, methodName){
-	var rv = "\n#if COCOS2D_DEBUG >= 1 \n";
-	rv +=    "  if(!tolua_isusertable(tolua_S, 1, \"user." + className + "\", 0, &tolua_err)) goto tolua_lerror;\n";
-	rv +=    "#endif\n\n";
-	rv +=    "\n";
-	rv +=    "  cobj = (" + className + "*)tolua_tousertype(tolua_S, 1, 0);\n";
-	rv +=    "\n";
-
-	rv +=    "#if COCOS2D_DEBUG >= 1 \n";
-	rv +=    "  if(!cobj)\n";
-	rv +=    "  {\n";
-	rv +=    "    tolua_error(tolua_S, \"invalid 'cobj' in function 'lua_" + className + "_" + methodName + "'.\");\n";
-	rv +=    "    return 0;\n";
-	rv +=    "  }\n";
-	rv +=    "#endif\n\n"
-	return rv;
+function xchunk(tmplFilePath){
+	assert(1  == arguments.length, "must be of length 1" );
+	return fs.readFileSync(tmplFilePath).toString('utf8');
 }
 
 function getArgcCheck(argcCount){
-	var rv = "  argc = lua_gettop(tolua_S) - 1;\n";
-	rv +=    "  if(argc == " + argcCount + ")\n";
-	rv +=    "  {\n";
-	rv +=    "    if(!ok) return 0;\n";
-	return rv;
+	return format(xchunk('tmpl/argccheck'),{Argc:argcCount});
 }
 
 function getArgcCheckEnd(hasReturn, expected, name){
-	var rv =    "    return " + (hasReturn ? 1:0) + ";\n";
-	rv    +=    "  }\n";
-	rv    +=    "  CCLOG(\"%s has wrong number of arguments: %d, was expecting %d\", \"" + 
-					name + "\" , argc, " + expected + ");\n";
-	return rv;
-}
-
-function getErrorSeg(clsName, methodName){
-	var rv = "\n";
-	rv    += "#if COCOS2D_DEBUG >= 1 \n"
-	rv    += "  tolua_lerror:\n";
-	rv    += "  tolua_error(tolua_S, \"#ferror in function 'lua_user_" + clsName + "_" + methodName + "'.\",  &tolua_err);\n";
-	rv +=    "#endif\n";
-	return rv;
+	return format(xchunk('tmpl/argccheckend'), 
+		{Return:(hasReturn?1:0),
+		 Method:name,
+		 Expected:expected
+		}
+	);
 }
 
 function getParam(type, p){
@@ -73,26 +30,28 @@ function getParam(type, p){
 }
 
 function writeFunction(clsName, info, name, isStatic, writer){
+	var op = {
+    Class:clsName,
+		Method:name,
+		Static:(+isStatic?1:0),
+		Space:'user',
+	};
 	writer("///////Automatical for lua_" + clsName + "_" + name + "(...)\n");
-	writer(getFunctionSig(clsName, name));
-	//body
-	writer("\n{\n");
-	writer(getPredecl(clsName, isStatic));
-	writer(getErrorDecl());
-	writer(getTableCheck(clsName, name));
-	writer(getArgcCheck(info.Param.length, name));
+	writer(format(xchunk('tmpl/func').trim(),op));
 
+	//~body
+	writer("\n{\n");
+	writer(format(xchunk('tmpl/predecl'),op));
+	writer(xchunk('tmpl/error'));
+	writer(format(xchunk('tmpl/tablecheck'),op));
+	writer(getArgcCheck(info.Param.length));
 	for(var i=0;i<info.Param.length;++i){
 		writer("    " + info.Param[i] + " p"+i+ " = " + getParam(info.Param[i], i+2));
 	}
-
 	writer("    ");
-	if(info.Type == "void") {
-
-	} else {
+	if(info.Type != "void") {
 		writer(info.Type + " retval = ");
 	}
-
 	//Calling starts
 	if(isStatic){
 		writer(clsName + "::" + name + "(");
@@ -101,11 +60,11 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	}
 	for(var i=0;i<info.Param.length;++i){
 		writer("p"+i);
-		if( i < info.Param.length - 1 ){
+		if (i < info.Param.length - 1){
 			writer(",");
 		}
 	}
-	writer(");\n\n");
+	writer(");\n");
 	//Calling over
 
 	if(typeOut[info.Type]){
@@ -114,15 +73,27 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	} else {
 		if(info.Type != 'void'){
 			writer("    ");
-			writer("object_to_luaval<" + info.Type + ">(tolua_S, \"user." + clsName + "\",retval);\n");
+			writer(format(xchunk('tmpl/retnode'),{Type:info.Type,Class:clsName, Space:'user'}));
 		}
 	}
 
 	writer(getArgcCheckEnd(info.Type!='void', info.Param.length, name));
-	writer(getErrorSeg(clsName, name));
+	writer(format(xchunk('tmpl/errseg'),op));
 	writer("  return 0;\n");
+	writer("}\n\n\n");
+}
 
-	writer("\n}\n\n\n");
+
+function genBufferWriter(){
+  var text = '';
+  return {
+    w:function(content){
+      text = text + content;
+    },
+    r:function(){
+      return text;
+    }
+  };
 }
 
 function ParseOne(o, clsName){
@@ -132,39 +103,38 @@ function ParseOne(o, clsName){
 	// }
 	//console.log("Object");
 	var writer = function(d){ process.stdout.write(d);};
-	writer("//Section for " + clsName);
+	writer("//SECTION FOR [" + clsName + "]");
 	for(var i in o.Object){
 		writeFunction(clsName, o.Object[i], i, false, writer);
 	}
 	for(var i in o.Static){
 	  writeFunction(clsName, o.Static[i], i, true, writer);
 	}
-	writer("//Section for " + clsName + " over.\n");
+	writer("//SECTION FOR [" + clsName + "] END.\n\n\n");
 
-
-	writer("int lua_register_user_" + clsName + "(lua_State *tolua_S)\n");
-	writer("{\n");
-	writer("  tolua_usertype(tolua_S, \"user." + clsName + "\");\n");
-	writer("  tolua_cclass(tolua_S, \"" + clsName + "\", \"user." + 
-		clsName + "\", \"cc." + o.Super + "\", nullptr);\n");
-	writer("  tolua_beginmodule(tolua_S, \"" + clsName + "\");\n");
-
-
-	var outs = function(sets){
-		for(var i in sets){
-			writer("    tolua_function(tolua_S, \"" + i + "\", lua_user_" + clsName +
-						"_" + i + ");\n");
-		}
+	//
+	
+	var h = genBufferWriter();
+	var lineFmt = xchunk('tmpl/insert');
+	var go = function(s){
+	  for(var i in s){
+	  	h.w(format(lineFmt, {
+	  	  Method:i,
+	  	  Space:'user',
+	  	  Class:clsName
+	  	 })
+	  	);
+		}//~for
 	};
-	outs(o.Object);
-	outs(o.Static);
-
-	writer("  tolua_endmodule(tolua_S);\n");
-	writer("  std::string typeName = typeid(" + clsName + ").name();\n");
-	writer("  g_luaType[typeName] = \"user." + clsName + "\";\n");
-	writer("  g_typeCast[\"" + clsName + "\"] = \"user." + clsName + "\";\n");
-	writer("  return 1;\n");
-	writer("}\n");
+	go(o.Object);
+	go(o.Static);
+	var text = format(xchunk('tmpl/exports'), {
+        Super:o.Super, 
+				Class:clsName, 
+				Space:"user", 
+				Insert:h.r}
+  );
+	writer(text);
 }
 
 function main(){

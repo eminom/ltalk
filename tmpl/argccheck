@@ -1,0 +1,6 @@
+  argc = lua_gettop(tolua_S) - 1;
+  if(argc == ${Argc})
+  {
+    if(!ok) {
+      return 0;
+    }

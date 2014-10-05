@@ -1,0 +1,7 @@
+  int argc = 0;
+  bool ok = true; 
+
+#if ${Static}
+  ${Class}* cobj = nullptr;
+#endif
+
