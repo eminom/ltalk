@@ -33,7 +33,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	var op = {
     Class:clsName,
 		Method:name,
-		Static:(+isStatic?1:0),
+		Static:(+isStatic?0:1),
 		Space:'user',
 	};
 	writer("///////Automatical for lua_" + clsName + "_" + name + "(...)\n");
