@@ -7,7 +7,7 @@ int lua_${Space}_${Class}_${Method}(lua_State *tolua_S)
 #endif
 #if COCOS2D_DEBUG >= 1 
   tolua_Error tolua_err;
-  if(!tolua_isusertable(tolua_S, 1, "${Space}.${Class}", 0, &tolua_err))
+  if(!tolua_isuser${Check}(tolua_S, 1, "${Space}.${Class}", 0, &tolua_err))
   {
     goto tolua_lerror;
   }

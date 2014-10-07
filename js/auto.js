@@ -39,6 +39,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 		Return:('void' != info.Type ? 1:0),
 		Expected:info.Param.length,
 		Argc:info.Param.length,
+		Check:(+isStatic?"table":"type"),
 	};
 
 	//FIRST
