@@ -77,6 +77,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 
 	//SECOND PART
 	writer(format(xchunk('tmpl/second'),op));
+	writer("\n");
 }
 
 
