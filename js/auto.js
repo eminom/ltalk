@@ -96,7 +96,7 @@ function ParseOne(o, clsName){
 	// }
 	//console.log("Object");
 	var writer = function(d){ process.stdout.write(d);};
-	writer("//SECTION FOR [" + clsName + "]");
+	writer("//SECTION FOR [" + clsName + "]\n\n");
 	for(var i in o.Object){
 		writeFunction(clsName, o.Object[i], i, false, writer);
 	}
