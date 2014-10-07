@@ -1,6 +1,0 @@
-
-#if COCOS2D_DEBUG >= 1
-  tolua_Error tolua_err;
-#endif
-
-

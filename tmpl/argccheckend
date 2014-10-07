@@ -1,3 +1,0 @@
-    return ${Return};
-  }
-  CCLOG("${Method} has wrong number of arguments: %d, was expecting %d.", argc, ${Expected});

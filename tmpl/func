@@ -1,2 +1,0 @@
-int lua_${Space}_${Class}_${Method}(lua_State *tolua_S)
-
