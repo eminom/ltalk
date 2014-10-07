@@ -5,6 +5,9 @@
 #include "lwrite.h"
 #include "json/cJSON.h"
 
+#define SymFuncEnd		"+"
+#define SymStructEnd	"*"
+
 void paramEntry_writeRecursive(ParamEntry *param){
 	if(!param){return;}
 	paramEntry_writeRecursive(param->next);
@@ -30,10 +33,7 @@ void funcEntry_writeRecursive(FuncEntry *func){
 	funcEntry_write(func);
 }
 
-//#define _WRITE_PLAIN
-
-#if defined(_WRITE_PLAIN)
-void chExports_write(StructExports *ex){
+void chExports_writeSingle(StructExports *ex){
 	printf("structure %s ", ex->name);
 	if(ex->superClass){
 		printf(": public %s ", ex->superClass);
@@ -41,6 +41,19 @@ void chExports_write(StructExports *ex){
 	printf("{\n");
 	funcEntry_writeRecursive(ex->func);
 	printf("}%s\n", SymStructEnd);
+}
+
+void chExports_writeRecursive(StructExports *ex){
+	if(!ex){ return; }
+	chExports_writeRecursive(ex->next);
+	chExports_writeSingle(ex);
+}
+
+//#define _WRITE_PLAIN
+
+#if defined(_WRITE_PLAIN)
+void chExports_write(StructExports *ex){
+	chExports_writeRecursive(ex);
 }
 #endif
 
@@ -67,11 +80,7 @@ void funcEntry_writeRecursive_J(FuncEntry *fe, cJSON *func, cJSON *staticFunc){
 	funcEntry_write_J(fe, func, staticFunc);
 }
 
-
-#if !defined(_WRITE_PLAIN)
-void chExports_write(StructExports *ex){
-	cJSON *root = cJSON_CreateObject();
-
+void chExports_writeSingle_J(StructExports *ex, cJSON *root){
 	cJSON *thisStru = cJSON_CreateObject();
 	cJSON_AddItemToObject(root, ex->name, thisStru);
 
@@ -82,17 +91,26 @@ void chExports_write(StructExports *ex){
 	cJSON_AddItemToObject(thisStru, "Static", staticFunc);
 
 	const char *superCls = "SuperNode"; //This is the default
-	if(ex->superClass){
-		superCls = ex->superClass;
-	}
+	if(ex->superClass){	superCls = ex->superClass;}
 	cJSON_AddItemToObject(thisStru, "Super", cJSON_CreateString(superCls));
+}
 
-	//
-	char * outs = cJSON_Print(root);
-	printf("%s", outs);
+void chExports_writeRecursive_J(StructExports *ex, cJSON *root){
+	if(!ex){ return; }
+	chExports_writeRecursive_J(ex->next, root);
+	chExports_writeSingle_J(ex, root);
+}
+
+#if !defined(_WRITE_PLAIN)
+void chExports_write(StructExports *ex){
+	cJSON *root = cJSON_CreateObject();
+	chExports_writeRecursive_J(ex, root);
+	char *outs = cJSON_Print(root);
+	printf("%s\n", outs);
 	free(outs);
 	cJSON_Delete(root);
 }
+
 #endif
 
 

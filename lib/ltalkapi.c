@@ -76,11 +76,12 @@ void chExports_dispose(StructExports *ex){
 	free(ex);
 }
 
-StructExports* chExports_create(const char *name){
+StructExports* chExports_create(const char *name, StructExports *prev){
 	StructExports *ex = (StructExports*)malloc(sizeof(StructExports));
 	memset(ex, 0, sizeof(StructExports));
 	ex->name = (char*)malloc(sizeof(char)*(1+strlen(name)));
 	strcpy(ex->name, name);
+	ex->next = prev;
 	DBGPrint("%s(%p)", __FUNCTION__, ex);
 	return ex;
 }

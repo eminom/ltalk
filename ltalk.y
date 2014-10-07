@@ -35,13 +35,20 @@ extern int yylineno;
 
 %%
 
+StructGroup:
+StructDefinitionOp{};
+
+StructDefinitionOp:
+StructDefinition StructDefinitionOp{}
+|{}
+;
+
 StructDefinition:
 StructHead StructHeadOp StructBody TokenSemicolon{
 	DBGPrint("Struct[%s] is defined", curEx->name);
 	assert(curEx->func == 0);
 	curEx->func = curFunc;
 	curFunc = NULL;
-	chExports_write(curEx);
 }
 ;
 
@@ -55,10 +62,7 @@ TokenColon TokenPublic Var {
 StructHead:
 TokenStruct Var{
 	DBGPrint("[Struct] picks %s", $2);
-	if(curEx){
-		chExports_dispose(curEx);
-	}
-	curEx = chExports_create($2);
+	curEx = chExports_create($2, curEx);
 };
 
 StructBody:
@@ -160,8 +164,15 @@ int main(void){
 		return -1;
 	}
 
-	if(curEx){
-		chExports_dispose(curEx);
+	if(curEx)	{
+		chExports_write(curEx);
+	}
+
+	//Clean ups
+	while(curEx){
+		StructExports *old = curEx;
+		curEx = curEx->next;
+		chExports_dispose(old);
 	}
 	typeStr_dispose();
 

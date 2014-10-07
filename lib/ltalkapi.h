@@ -8,10 +8,6 @@
 //#define DBGPrint(...)	{ printf(__VA_ARGS__); puts("");}
 #define DBGPrint(...)
 
-#define SymStructEnd	""
-#define SymFuncEnd		""
-
-
 typedef struct tagParamEntry{
 	char *typeString;
 	struct tagParamEntry *next;
@@ -36,7 +32,7 @@ typedef struct tagStructExports{
 	char *name;
 	FuncEntry *func;
 	char *superClass;
-	//No next for now
+	struct tagStructExports *next;
 }StructExports;
 
 extern StructExports *curEx;
@@ -49,7 +45,7 @@ void typeStr_set(const char* name);
 void typeStr_dispose();
 
 void chExports_dispose(StructExports *ex);
-StructExports* chExports_create(const char *name);
+StructExports* chExports_create(const char *name, StructExports *prev);
 void chExports_setName(StructExports *ex, const char *name);
 void chExports_setSuperInfo(StructExports *ex, const char *superName);
 
