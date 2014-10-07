@@ -35,6 +35,9 @@ function writeFunction(clsName, info, name, isStatic, writer){
 		Method:name,
 		Static:(+isStatic?0:1),
 		Space:'user',
+		Return:('void' != info.Type ? 1:0),
+		Expected:info.Param.length,
+		Argc:info.Param.length,
 	};
 
 	//FIRST
@@ -68,7 +71,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	} else {
 		if(info.Type != 'void'){
 			writer("    ");
-			writer(format(xchunk('tmpl/retnode'),{Type:info.Type,Class:clsName, Space:'user'}));
+			writer(format(xchunk('tmpl/ret'),{Type:info.Type,Class:clsName, Space:'user'}));
 		}
 	}
 
