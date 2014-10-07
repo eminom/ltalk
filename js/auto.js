@@ -36,18 +36,13 @@ function writeFunction(clsName, info, name, isStatic, writer){
 		Static:(+isStatic?0:1),
 		Space:'user',
 	};
-	writer("///////Automatical for lua_" + clsName + "_" + name + "(...)\n");
-	writer(format(xchunk('tmpl/func').trim(),op));
 
-	//~body
-	writer("\n{\n");
-	writer(format(xchunk('tmpl/predecl'),op));
-	writer(xchunk('tmpl/error'));
-	writer(format(xchunk('tmpl/tablecheck'),op));
-	writer(getArgcCheck(info.Param.length));
+	//FIRST
+	writer(format(xchunk('tmpl/first'), op));
 	for(var i=0;i<info.Param.length;++i){
 		writer("    " + info.Param[i] + " p"+i+ " = " + getParam(info.Param[i], i+2));
 	}
+
 	writer("    ");
 	if(info.Type != "void") {
 		writer(info.Type + " retval = ");
@@ -77,10 +72,8 @@ function writeFunction(clsName, info, name, isStatic, writer){
 		}
 	}
 
-	writer(getArgcCheckEnd(info.Type!='void', info.Param.length, name));
-	writer(format(xchunk('tmpl/errseg'),op));
-	writer("  return 0;\n");
-	writer("}\n\n\n");
+	//SECOND PART
+	writer(format(xchunk('tmpl/second'),op));
 }
 
 
@@ -115,7 +108,7 @@ function ParseOne(o, clsName){
 	//
 	
 	var h = genBufferWriter();
-	var lineFmt = xchunk('tmpl/insert');
+	var lineFmt = "    " + xchunk('tmpl/insert').trim() + "\n";
 	var go = function(s){
 	  for(var i in s){
 	  	h.w(format(lineFmt, {

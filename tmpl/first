@@ -1,0 +1,32 @@
+int lua_${Space}_${Class}_${Method}(lua_State *tolua_S)
+{
+  int argc = 0;
+  bool ok = true; 
+#if ${Static}
+  ${Class}* cobj = nullptr;
+#endif
+#if COCOS2D_DEBUG >= 1 
+  tolua_Error tolua_err;
+  if(!tolua_isusertable(tolua_S, 1, "${Space}.${Class}", 0, &tolua_err))
+  {
+    goto tolua_lerror;
+  }
+#endif
+#if ${Static}
+  cobj = (${Class}*)tolua_tousertype(tolua_S, 1, 0);
+#if COCOS2D_DEBUG >= 1 
+  if (!cobj) 
+  {
+    tolua_error(tolua_S, "invalid 'cobj' in function 'lua_${Class}_${Method}'.");
+    return 0;
+  }
+#endif
+#endif
+
+  argc = lua_gettop(tolua_S) - 1;
+  if(argc == ${Argc})
+  {
+    if(!ok) 
+    {
+      return 0;
+    }
