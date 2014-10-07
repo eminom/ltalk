@@ -1,1 +1,1 @@
-tolua_function(tolua_S, lua_${Space}_${Class}_${Method});
+tolua_function(tolua_S, "${Method}", lua_${Space}_${Class}_${Method});

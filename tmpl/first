@@ -17,7 +17,7 @@ int lua_${Space}_${Class}_${Method}(lua_State *tolua_S)
 #if COCOS2D_DEBUG >= 1 
   if (!cobj) 
   {
-    tolua_error(tolua_S, "invalid 'cobj' in function 'lua_${Class}_${Method}'.");
+    tolua_error(tolua_S, "invalid 'cobj' in function 'lua_${Class}_${Method}'.", nullptr);
     return 0;
   }
 #endif

@@ -6,6 +6,7 @@ var loadStream = require('./loader');
 var typeIn = require('./typecaster').in;
 var typeOut= require('./typecaster').out;
 var format = require('./format').formatKey;
+var trim = require('./trim');
 
 function xchunk(tmplFilePath){
 	assert(1  == arguments.length, "must be of length 1" );
@@ -71,7 +72,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	} else {
 		if(info.Type != 'void'){
 			writer("    ");
-			writer(format(xchunk('tmpl/ret'),{Type:info.Type,Class:clsName, Space:'user'}));
+			writer(format(xchunk('tmpl/ret'),{Type:trim(info.Type,'*'),Class:clsName, Space:'user'}));
 		}
 	}
 
