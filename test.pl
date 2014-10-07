@@ -12,6 +12,7 @@ sub getFileList{
 	while ( my $f = readdir $cd ){
 		my $ff = $cur . '/' . $f;
 		next if not -f $ff;
+		next if not $f =~ /\.pak$/;
 		#print $ff,"\n";
 		push @rv, $ff;
 	}
