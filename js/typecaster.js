@@ -4,7 +4,7 @@ var typeCaster = {
 	"float":function(p){return "lua_tonumber(tolua_S, " + p + ")"},
 	"const char*":function(p){return "lua_tostring(tolua_S, " + p + ")"},
 	"bool":function(p){return "lua_toboolean(tolua_S, " + p + ")"},
-	"Node":"cocos2d::Node* p${No}; ok &= luaval_to_object<cocos2d::Node>(tolua_S, ${Index}, \"cc.Node\", &p${No})"
+	"Node*":"cocos2d::Node* p${No}; ok &= luaval_to_object<cocos2d::Node>(tolua_S, ${Index}, \"cc.Node\", &p${No})"
 };
 
 var typeOut = {
