@@ -5,7 +5,7 @@ var format  = function() {
 	var fmt = (typeof(args[0])==='string'? args[0]:'');
 	var length = args.length;
 	for(var i=1;i<length;++i){
-	  var pattern = new RegExp('\\$\\{'+i+'\\}', 'g');
+	  var pattern = new RegExp('\\{'+(i-1)+'\\}', 'g');
 		fmt = fmt.replace(pattern, args[i]);
 	}
 	return fmt;

@@ -6,6 +6,7 @@ var loadStream = require('./loader');
 var typeIn = require('./typecaster').in;
 var typeOut= require('./typecaster').out;
 var format = require('./format').formatKey;
+var formatStr = require('./format').format;
 var trim = require('./trim');
 
 function xchunk(tmplFilePath){
@@ -26,8 +27,14 @@ function getArgcCheckEnd(hasReturn, expected, name){
 	);
 }
 
-function getParam(type, p){
-	return typeIn[type](p);
+function getParam(type, op){
+	var rv;
+	if(typeof typeIn[type] == 'function'){
+		rv = formatStr("{0} p{1} = {2};\n", type, op.No, typeIn[type](op.Index));
+	} else {
+		rv = format(typeIn[type], op) + ";\n"; 
+	}
+	return rv;
 }
 
 function writeFunction(clsName, info, name, isStatic, writer){
@@ -45,7 +52,7 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	//FIRST
 	writer(format(xchunk('tmpl/first'), op));
 	for(var i=0;i<info.Param.length;++i){
-		writer("    " + info.Param[i] + " p"+i+ " = " + getParam(info.Param[i], i+2));
+		writer("    " +  getParam(info.Param[i], {No:i, Index:i+2}));
 	}
 
 	writer("    ");
