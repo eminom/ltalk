@@ -1,7 +1,7 @@
     return ${Return};
   }
   CCLOG("${Method} has wrong number of arguments: %d, was expecting %d.", argc, ${Expected});
-	return 0;
+  return 0;
 #if COCOS2D_DEBUG >= 1
   tolua_lerror:
   tolua_error(tolua_S, "#ferror in function 'lua_${Space}_${Class}_${Method}'.",&tolua_err);
