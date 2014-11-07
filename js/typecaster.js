@@ -13,7 +13,7 @@ var typeCaster = {
 	"const char*":function(p){return "lua_tostring(tolua_S, " + p + ")"},
 	"bool":function(p){return "lua_toboolean(tolua_S, " + p + ")"},
 	"Node*":genObjSlice("Node"),
-	"FiniteTimeAction*":genObjSlice("FiniteTimeAction");},
+	"FiniteTimeAction*":genObjSlice("FiniteTimeAction"),
 };
 
 var typeOut = {
