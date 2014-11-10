@@ -7,6 +7,12 @@ var genObjSlice = function(name) {
 		name);
 }
 
+var genUserSlice = function(name){
+	return format("{0}* p${No}; " +
+		"ok &= luaval_to_object<{0}>(tolua_S, ${Index}, \"user.{0}\", &p${No})", 
+		name);
+}
+
 var typeCaster = {
 	"int":function(p){return "lua_tointeger(tolua_S, " + p + ")"},
 	"float":function(p){return "lua_tonumber(tolua_S, " + p + ")"},
@@ -14,6 +20,7 @@ var typeCaster = {
 	"bool":function(p){return "lua_toboolean(tolua_S, " + p + ")"},
 	"Node*":genObjSlice("Node"),
 	"FiniteTimeAction*":genObjSlice("FiniteTimeAction"),
+	"SkeletonExAuto*":genUserSlice("SkeletonExAuto"),
 };
 
 var typeOut = {
