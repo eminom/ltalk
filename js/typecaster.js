@@ -18,6 +18,7 @@ var typeCaster = {
 	"float":function(p){return "lua_tonumber(tolua_S, " + p + ")"},
 	"const char*":function(p){return "lua_tostring(tolua_S, " + p + ")"},
 	"bool":function(p){return "lua_toboolean(tolua_S, " + p + ")"},
+	"void*":function(p){return "(void*)lua_topointer(tolua_S, " + p + ")"},
 	"Node*":genObjSlice("Node"),
 	"FiniteTimeAction*":genObjSlice("FiniteTimeAction"),
 	"SkeletonExAuto*":genUserSlice("SkeletonExAuto"),
