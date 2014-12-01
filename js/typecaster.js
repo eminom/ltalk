@@ -13,6 +13,15 @@ var genUserSlice = function(name){
 		name);
 }
 
+var genFunc = function() {
+	return format(
+		"if(!lua_isfunction(tolua_S, ${Index})){printf(\"warning: not a function!\");} " +
+		"lua_pushvalue(tolua_S, ${Index}); " + 
+		"int p${No} = luaL_ref(tolua_S, LUA_REGISTRYINDEX); " + 
+		"assert(p${No}!=LUA_REFNIL);"
+	);
+}
+
 var typeCaster = {
 	"int":function(p){return "lua_tointeger(tolua_S, " + p + ")"},
 	"float":function(p){return "lua_tonumber(tolua_S, " + p + ")"},
@@ -22,6 +31,7 @@ var typeCaster = {
 	"Node*":genObjSlice("Node"),
 	"FiniteTimeAction*":genObjSlice("FiniteTimeAction"),
 	"SkeletonExAuto*":genUserSlice("SkeletonExAuto"),
+	"ExLuaFunc":genFunc()
 };
 
 var typeOut = {
