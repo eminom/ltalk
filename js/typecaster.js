@@ -39,6 +39,7 @@ var typeOut = {
 	"float":function(){return "lua_pushnumber(tolua_S, retval);\n"; },
 	"const char*":function(){return "lua_pushstring(tolua_S, retval);\n";},
 	"bool":function(){return "lua_pushboolean(tolua_S, retval);\n"; },
+	"SkeletonAnimation*":function(){ return "object_to_luaval<spine::SkeletonAnimation>(tolua_S, \"sp.SkeletonAnimation\", retval);\n";}
 };
 
 module.exports = {
