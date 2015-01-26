@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <malloc.h>
+//#include <malloc.h>
 
 void paramEntry_dispose(ParamEntry *param){
 	ParamEntry *now = param;
