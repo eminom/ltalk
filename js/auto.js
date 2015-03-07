@@ -2,12 +2,14 @@
 
 var fs = require('fs');
 var assert = require('assert');
-var loadStream = require('./loader');
+
+var third = require('./third');
+var loadStream = third.loader;
 var typeIn = require('./typecaster').in;
 var typeOut= require('./typecaster').out;
-var format = require('./format').formatKey;
-var formatStr = require('./format').format;
-var trim = require('./trim');
+var format = third.formatKey;
+var formatStr = third.format;
+var trim = third.trim;
 
 function xchunk(tmplFilePath){
 	assert(1  == arguments.length, "must be of length 1" );
