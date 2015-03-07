@@ -12,8 +12,8 @@ int yylex(void);
 void yyerror(char *);
 extern int yylineno;
 
-#include "lib/ltalkapi.h"
-#include "lib/lwrite.h"
+#include "ltalkapi.h"
+#include "lwrite.h"
 
 %}
 

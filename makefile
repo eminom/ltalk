@@ -1,13 +1,16 @@
 SOURCE = lex.yy.c\
 	y.tab.c\
-	lib/ltalkapi.c\
-	lib/lwrite.c\
+	src/ltalkapi.c\
+	src/lwrite.c\
 	lib/json/cJSON.c
+
+INCLUDE_DIRS = -I./lib\
+	-I./src
 
 all:
 	yacc -d ltalk.y
 	lex -l ltalk.l
-	cc -std=c99 -o parser $(SOURCE) -lm
+	cc -std=c99 -o parser $(SOURCE) ${INCLUDE_DIRS} -lm
 
 clean:
 	rm -rf parser
