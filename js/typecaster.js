@@ -1,8 +1,9 @@
 
 //Yes
 var format = require('./third').formatKey;
+var formatf = require('./third').format;
 var genObjSlice = function(name) {
-	return format("cocos2d::{0}* p${No}; " +
+	return formatf("cocos2d::{0}* p${No}; " +
 		"ok &= luaval_to_object<cocos2d::{0}>(tolua_S, ${Index}, \"cc.{0}\", &p${No})", 
 		name);
 }
