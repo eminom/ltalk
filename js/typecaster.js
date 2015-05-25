@@ -6,13 +6,13 @@ var genObjSlice = function(name) {
 	return formatf("cocos2d::{0}* p${No}; " +
 		"ok &= luaval_to_object<cocos2d::{0}>(tolua_S, ${Index}, \"cc.{0}\", &p${No})", 
 		name);
-}
+};
 
 var genUserSlice = function(name){
 	return format("{0}* p${No}; " +
 		"ok &= luaval_to_object<{0}>(tolua_S, ${Index}, \"user.{0}\", &p${No})", 
 		name);
-}
+};
 
 var genFunc = function() {
 	return format(
@@ -21,7 +21,18 @@ var genFunc = function() {
 		"int p${No} = luaL_ref(tolua_S, LUA_REGISTRYINDEX); " + 
 		"assert(p${No}!=LUA_REFNIL);"
 	);
-}
+};
+
+//~ This handler is saved for this instance. 
+//~ And we purge it from time to time
+var genLuaHandlerFunc = function(){
+	return format(
+	  "// This is for the LUA_FUNCTION converter ! \n" + 
+		"\t\tif(!lua_isfunction(tolua_S, ${Index})){printf(\"Warning: not a function for LUA_FUNCTION!\");} \n" +
+		"\t\tLUA_FUNCTION handler = toluafix_ref_function(tolua_S, ${Index}, 0); \n" +
+		"\t\tScriptHandlerMgr::getInstance()->addObjectHandler((void*)cobj, handler, ScriptHandlerMgr::HandlerType::CALLFUNC);\n"
+	);
+};
 
 var typeCaster = {
 	"int":function(p){return "lua_tointeger(tolua_S, " + p + ")"},
@@ -32,7 +43,8 @@ var typeCaster = {
 	"Node*":genObjSlice("Node"),
 	"FiniteTimeAction*":genObjSlice("FiniteTimeAction"),
 	"SkeletonExAuto*":genUserSlice("SkeletonExAuto"),
-	"ExLuaFunc":genFunc()
+	"ExLuaFunc":genFunc(),
+	"LUA_FUNCTION":genLuaHandlerFunc(),
 };
 
 var typeOut = {
