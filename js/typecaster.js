@@ -30,7 +30,7 @@ var genLuaHandlerFunc = function(){
 	  "// This is for the LUA_FUNCTION converter ! \n" + 
 		"\t\tif(!lua_isfunction(tolua_S, ${Index})){printf(\"Warning: not a function for LUA_FUNCTION!\");} \n" +
 		"\t\tLUA_FUNCTION p${No} = toluafix_ref_function(tolua_S, ${Index}, 0); \n" +
-		"\t\tScriptHandlerMgr::getInstance()->addObjectHandler((void*)cobj, handler, ScriptHandlerMgr::HandlerType::CALLFUNC);\n"
+		"\t\tScriptHandlerMgr::getInstance()->addObjectHandler((void*)cobj, p${No}, ScriptHandlerMgr::HandlerType::CALLFUNC);\n"
 	);
 };
 
