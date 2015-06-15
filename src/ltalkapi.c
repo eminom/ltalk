@@ -105,6 +105,16 @@ void chExports_setSuperInfo(StructExports *ex, const char *superClass){
 	strcpy(ex->superClass, superClass);
 };
 
+static int _doChecking = 0;
+void chVarSet_Test(int check){
+	_doChecking = check;
+}
+
+int chVar_IsTest(){
+	return _doChecking;
+}
+
+
 
 StructExports *curEx = 0;
 ParamEntry *curParam = 0;

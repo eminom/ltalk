@@ -49,4 +49,9 @@ StructExports* chExports_create(const char *name, StructExports *prev);
 void chExports_setName(StructExports *ex, const char *name);
 void chExports_setSuperInfo(StructExports *ex, const char *superName);
 
+
+//~ The debugging tools
+void chVarSet_Test(int check);
+int chVar_IsTest();
+
 #endif

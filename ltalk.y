@@ -158,10 +158,19 @@ void yyerror(char *err){
 	printf("error:%s, line %d\n", err, yylineno);
 }
 
-int main(void){
+int main(int argc, char*argv[]){
 	if(yyparse()){
 		printf("error parsing\n");
 		return -1;
+	}
+
+	//~ Checking for -test flag.
+	int i;
+	for(i=0;i<argc;++i){
+		if(!strcmp(argv[i],"-test")){
+			chVarSet_Test(1);
+			break;
+		}
 	}
 
 	if(curEx)	{

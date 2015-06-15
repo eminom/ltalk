@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>   // strcmp
 #include "lwrite.h"
 #include "json/cJSON.h"
 
@@ -101,8 +102,34 @@ void chExports_writeRecursive_J(StructExports *ex, cJSON *root){
 	chExports_writeSingle_J(ex, root);
 }
 
+//~ 
+int _chExports_checkRepeat(StructExports *ex){
+	int isOver = 0;
+	StructExports *l0, *l1;
+	for(l0 = ex;l0 && !isOver; l0=l0->next ){
+		//fprintf(stderr,"checking \"%s\"\n", l0->name);
+		for(l1 = ex; l1; l1 = l1->next){
+			if(l1!=l0 && !strcmp(l1->name, l0->name)){
+				fprintf(stderr,"Suspicious duplicated class: \"%s(%s)\"\n", l0->name,l1->name);
+				isOver = 1;
+				break;
+			}
+		}
+	}
+	return isOver;
+}
+
 #if !defined(_WRITE_PLAIN)
 void chExports_write(StructExports *ex){
+	if(chVar_IsTest()){
+		if(_chExports_checkRepeat(ex)){
+			fprintf(stderr, "Error detected.\n");
+			exit(1);
+		} else {
+			fprintf(stderr, "Checking finished.\n");
+		}
+		exit(0);
+	}
 	cJSON *root = cJSON_CreateObject();
 	chExports_writeRecursive_J(ex, root);
 	char *outs = cJSON_Print(root);
