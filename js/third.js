@@ -4,4 +4,5 @@ module.exports = {
 	formatKey:require("../3rd/stb/js/lib/format").formatKey,
 	loader:require("../3rd/stb/js/lib/loader"),
 	trim:require("../3rd/stb/js/lib/trim"),
+	WriteStd:require("../3rd/stb/js/lib/writestd")
 };

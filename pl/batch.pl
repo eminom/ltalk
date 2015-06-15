@@ -8,6 +8,9 @@ use strict;
 use warnings;
 
 sub main{
+	my $suf_process = "| node js/auto";
+	$suf_process = "" if grep{$_ eq"test"} @ARGV;
+
 	my $inputs = 'input/includes';
 	open my$fin, "<", $inputs or die "cannot open targets";
 	my $list = "";
@@ -20,7 +23,7 @@ sub main{
 		$list = $list . ' ' . $1;
 	}
 	close $fin;
-	my $cmd = "cat $list | ./parser | node js/auto ";
+	my $cmd = "cat $list | ./parser $suf_process";
 	system($cmd);
 	die "ERROR" if $?;
 }
