@@ -34,6 +34,15 @@ var genLuaHandlerFunc = function(){
 	);
 };
 
+var genLuaTableFunc = function(){
+	return format(
+	  "// This is for the LUA_TABLE converter ! \n" + 
+		"\t\tif(!lua_istable(tolua_S, ${Index})){printf(\"Warning: not a table for LUA_TABLE!\");} \n" +
+		"\t\tLUA_TABLE p${No} = toluafix_ref_table(tolua_S, ${Index}, 0); \n" //+
+		//"\t\tScriptHandlerMgr::getInstance()->addObjectHandler((void*)cobj, p${No}, ScriptHandlerMgr::HandlerType::CALLFUNC);\n"
+	);
+};
+
 var typeCaster = {
 	"int":function(p){return "lua_tointeger(tolua_S, " + p + ")"},
 	"float":function(p){return "lua_tonumber(tolua_S, " + p + ")"},
@@ -45,6 +54,7 @@ var typeCaster = {
 	"SkeletonExAuto*":genUserSlice("SkeletonExAuto"),
 	"ExLuaFunc":genFunc(),
 	"LUA_FUNCTION":genLuaHandlerFunc(),
+	"LUA_TABLE":genLuaTableFunc(),
 };
 
 var typeOut = {
