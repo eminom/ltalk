@@ -1,1 +1,1 @@
-object_to_luaval<${Type}>(tolua_S,"${Space}.${Class}", retval);
+object_to_luaval<${Type}>(tolua_S,"${Space}.${Type}", retval);
