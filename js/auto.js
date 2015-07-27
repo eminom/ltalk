@@ -11,6 +11,22 @@ var format = third.formatKey;
 var formatStr = third.format;
 var trim = third.trim;
 
+
+var __knownCCTypes = {
+	Node:true,
+	Sprite:true,
+	GLProgram:true,
+	Layer:true,
+	Scene:true
+};
+
+function checkSpaceByType(type){
+	if(__knownCCTypes.hasOwnProperty(type)){
+		return "cc";
+	}
+	return "user";
+}
+
 function xchunk(tmplFilePath){
 	assert(1  == arguments.length, "must be of length 1" );
 	return fs.readFileSync(tmplFilePath).toString('utf8');
@@ -82,7 +98,8 @@ function writeFunction(clsName, info, name, isStatic, writer){
 	} else {
 		if(info.Type != 'void'){
 			writer("    ");
-			writer(format(xchunk('tmpl/ret'),{Type:trim(info.Type,'*'),Class:clsName, Space:'user'}));
+			var trimmedType = trim(info.Type, '*');
+			writer(format(xchunk('tmpl/ret'),{Type:trimmedType, Class:clsName, Space:checkSpaceByType(trimmedType)}));
 		}
 	}
 
